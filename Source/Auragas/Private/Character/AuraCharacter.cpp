@@ -4,8 +4,11 @@
 #include "Character/AuraCharacter.h"
 
 #include "AbilitySystemComponent.h"
+#include "Blueprint/UserWidget.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Player/AuraPlayerController.h"
 #include "Player/AuraPlayerState.h"
+#include "UI/HUD/AuraHUD.h"
 
 AAuraCharacter::AAuraCharacter()
 {
@@ -18,7 +21,7 @@ AAuraCharacter::AAuraCharacter()
 	bUseControllerRotationPitch = false; 
 	bUseControllerRotationRoll = false;
 	bUseControllerRotationYaw = false;
-	
+
 }
 
 void AAuraCharacter::PossessedBy(AController* NewController)
@@ -44,4 +47,17 @@ void AAuraCharacter::InitAbilityActorInfo()
 	AuraPlayerState->GetAbilitySystemComponent()->InitAbilityActorInfo(AuraPlayerState,this);
 	AbilitySystemComponent=AuraPlayerState->GetAbilitySystemComponent();
 	AttributeSet = AuraPlayerState->GetAttributeSet();
+
+	//32 在这里初始化 HUD通过 PlayerController来获取 所以需要先拿到PlayerController来获取
+	//HUD 属于 PlayerController HUD 永远不用自己创建 获取 HUD 唯一正确方式：PC->GetHUD ()
+	//PlayerController可能为空，因为在多人游戏中，只有服务端拥有全部的PlayerController，客户端只有自己的，没有其他的PlayerController
+	//所以在这里是检查指针，而不是check
+	if (AAuraPlayerController* AuraPlayerController=Cast<AAuraPlayerController>(GetController()))
+	{
+		 if (AAuraHUD*AuraHUD=Cast<AAuraHUD>(AuraPlayerController->GetHUD()))
+		 {
+		 	AuraHUD->InitOverlay(AuraPlayerController,AuraPlayerState,AbilitySystemComponent,AttributeSet);
+		 }
+	}
+	
 }

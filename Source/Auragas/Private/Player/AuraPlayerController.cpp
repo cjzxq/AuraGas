@@ -76,9 +76,11 @@ void AAuraPlayerController::BeginPlay()
 	check(AuraContext);
 	//9.添加输入映射文的方法是访问增强输入的本地子系统 子系统是一个单例模式，**在程序运行期间只存在一个，
 	UEnhancedInputLocalPlayerSubsystem *Subsystem =ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer());
-	check(Subsystem);
-	//后面的0代表优先级，因为可以同时拥有多个输入映射上下文
-	Subsystem->AddMappingContext(AuraContext,0);
+	if(Subsystem)
+	{
+		//后面的0代表优先级，因为可以同时拥有多个输入映射上下文
+		Subsystem->AddMappingContext(AuraContext,0);
+	}
 	//鼠标光标
 	bShowMouseCursor = true;
 	DefaultMouseCursor = EMouseCursor::Default;

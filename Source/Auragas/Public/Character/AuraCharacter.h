@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "Character/AuraCharacterBase.h"
 #include "AuraCharacter.generated.h"
-
+class UAuraUserWidget;
 /**
  * 
  */
@@ -18,6 +18,7 @@ public:
 	//24 设置Aura的InitAbilityActorInfo 重写下面两个函数
 	virtual void PossessedBy(AController*NewController) override;
 	virtual void OnRep_PlayerState() override;
+
 private:
 	void InitAbilityActorInfo();
 	
